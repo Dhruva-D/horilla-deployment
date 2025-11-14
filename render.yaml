@@ -3,7 +3,7 @@ services:
   - type: web
     name: horilla
     runtime: python
-    plan: starter
+    plan: free
     buildCommand: "./build.sh"
     startCommand: "gunicorn horilla.wsgi:application"
     envVars:
@@ -29,4 +29,4 @@ databases:
   - name: horilla-db
     databaseName: horilla
     user: horilla
-    plan: starter
+    plan: free
