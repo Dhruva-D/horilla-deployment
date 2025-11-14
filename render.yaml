@@ -3,7 +3,7 @@ services:
   - type: web
     name: horilla
     runtime: python
-    plan: starter  # Change to 'free' for free tier or 'starter' for production
+    plan: starter
     buildCommand: "./build.sh"
     startCommand: "gunicorn horilla.wsgi:application"
     envVars:
@@ -23,20 +23,10 @@ services:
         sync: false
       - key: TIME_ZONE
         value: UTC
-    healthCheckPath: /
-    autoDeploy: true
 
+databases:
   # PostgreSQL Database
-  - type: pserv
-    name: horilla-db
-    runtime: postgresql
-    plan: starter  # Change to 'free' for free tier
-    ipAllowList: []  # Allow all IPs, or restrict as needed
-    databases:
-      - name: horilla
-        user: horilla
-    envVars:
-      - key: POSTGRES_DB
-        value: horilla
-      - key: POSTGRES_USER
-        value: horilla
+  - name: horilla-db
+    databaseName: horilla
+    user: horilla
+    plan: starter
