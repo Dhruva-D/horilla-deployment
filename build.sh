@@ -10,10 +10,7 @@ echo "Collecting static files..."
 python manage.py collectstatic --no-input --clear
 
 echo "Running database migrations..."
-python manage.py migrate --no-input --run-syncdb
-
-echo "Verifying migrations..."
-python manage.py showmigrations
+python manage.py migrate --no-input
 
 echo "Creating cache table..."
 python manage.py createcachetable || true
