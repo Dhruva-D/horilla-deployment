@@ -2859,28 +2859,50 @@ def total_employees_count(request):
 @login_required
 def joining_today_count(request):
     newbies_today = 0
+    today = date.today()
+    
+    # Count candidates from recruitment with joining date today (exclude converted ones)
     if apps.is_installed("recruitment"):
         Candidate = get_horilla_model_class(app_label="recruitment", model="candidate")
-        newbies_today = Candidate.objects.filter(
-            joining_date__range=[date.today(), date.today() + timedelta(days=1)],
+        newbies_today += Candidate.objects.filter(
+            joining_date=today,
             is_active=True,
+            converted_employee_id__isnull=True,  # Exclude converted candidates
         ).count()
+    
+    # Count employees created directly with joining date today
+    newbies_today += EmployeeWorkInformation.objects.filter(
+        date_joining=today,
+        employee_id__is_active=True,
+    ).count()
+    
     return HttpResponse(newbies_today)
 
 
 @login_required
 def joining_week_count(request):
     newbies_week = 0
+    today = date.today()
+    first_day_of_week = today - timedelta(days=today.weekday())
+    last_day_of_week = first_day_of_week + timedelta(days=6)
+    
+    # Count candidates from recruitment with joining date this week (exclude converted ones)
     if apps.is_installed("recruitment"):
         Candidate = get_horilla_model_class(app_label="recruitment", model="candidate")
-        newbies_week = Candidate.objects.filter(
-            joining_date__range=[
-                date.today() - timedelta(days=date.today().weekday()),
-                date.today() + timedelta(days=6 - date.today().weekday()),
-            ],
+        newbies_week += Candidate.objects.filter(
+            joining_date__gte=first_day_of_week,
+            joining_date__lte=last_day_of_week,
             is_active=True,
-            hired=True,
+            converted_employee_id__isnull=True,  # Exclude converted candidates
         ).count()
+    
+    # Count employees created directly with joining date this week
+    newbies_week += EmployeeWorkInformation.objects.filter(
+        date_joining__gte=first_day_of_week,
+        date_joining__lte=last_day_of_week,
+        employee_id__is_active=True,
+    ).count()
+    
     return HttpResponse(newbies_week)
 
 

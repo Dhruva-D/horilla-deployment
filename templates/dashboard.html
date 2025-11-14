@@ -146,7 +146,7 @@
                         </div>
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4">
                             <div class="oh-card-dashboard oh-card-dashboard oh-card-dashboard--warning tile">
-                                <a href="{% url 'candidate-view' %}?scheduled_from={{first_day_of_week}}&scheduled_till={{last_day_of_week}}"
+                                <a href="{% url 'candidate-view' %}?joining_date__gte={{first_day_of_week}}&joining_date__lte={{last_day_of_week}}"
                                     style="text-decoration: none">
                                     <div class="oh-card-dashboard__header">
                                         <span class="oh-card-dashboard__title">{% trans "New Joining This Week" %}</span>
